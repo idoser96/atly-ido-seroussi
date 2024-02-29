@@ -16,6 +16,7 @@
 # production
 /build
 atly.db
+cache/
 
 # misc
 .DS_Store
