@@ -3,10 +3,11 @@ const path = require('path');
 
 const CACHE_DIR = './cache';
 const postsNumberPath = path.join(CACHE_DIR, 'postsNumber.json');
-
+fs.mkdirSync(CACHE_DIR, { recursive: true })
 // Caches used to avoid querying the database for the same data when not needed
 // Generally shouldn't be in the file system, but for the sake of the example, we'll use it
 // Can also cache the posts and their queries, but did not have time for it
+
 
 function getPostsNumber() {
     if (fs.existsSync(postsNumberPath)) {
