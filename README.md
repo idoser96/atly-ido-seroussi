@@ -12,6 +12,9 @@ pnpm dev
 bun dev
 ```
 
+(might need to npm install next)
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 This is the Frontend side of the task, used mostly for debugging and seeing the results
