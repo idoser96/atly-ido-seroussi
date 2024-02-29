@@ -13,6 +13,11 @@ function App() {
     const [topCreators, setTopCreators] = useState([]);
     const [runtimeStatistics, setRuntimeStatistics] = useState([]);
 
+    // Form state
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
+    const [userUuid, setUserUuid] = useState('');
+
     useEffect(() => {
         // Fetch posts
         axios.get('/api/posts')
@@ -64,6 +69,20 @@ function App() {
             .catch(error => console.error("There was an error dropping all data: ", error));
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+        axios.post('/api/posts', { title, body, userUuid })
+            .then(() => {
+                // Optionally, fetch the updated list of posts or append the new post to the posts state
+                console.log('Post added successfully.');
+                // Reset form fields
+                setTitle('');
+                setBody('');
+                setUserUuid('');
+            })
+            .catch(error => console.error("There was an error adding the post: ", error));
+    };
+
     return (
         <div>
             <h2>Posts</h2>
@@ -72,7 +91,7 @@ function App() {
                 <tr>
                     <th>Title</th>
                     <th>Body</th>
-                    <th>User Uuid</th>
+                    <th>User</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -89,6 +108,23 @@ function App() {
             <button onClick={fetchMorePosts} disabled={!hasMorePosts}>
                 Get More Posts
             </button>
+
+            <h2>Add New Post</h2>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Title:
+                    <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
+                </label>
+                <label>
+                    Body:
+                    <input value={body} onChange={e => setBody(e.target.value)} />
+                </label>
+                <label>
+                    User:
+                    <input type="text" value={userUuid} onChange={e => setUserUuid(e.target.value)} />
+                </label>
+                <button type="submit">Add Post</button>
+            </form>
 
             <h2>Users</h2>
             <table>
