@@ -1,6 +1,7 @@
 import {getDb} from "@/db/db";
 import {clearAllCaches} from "@/db/cache";
 
+// USED FOR TESTING PURPOSES ONLY
 
 export default function handler(req, res) {
     if (req.method === 'GET') {

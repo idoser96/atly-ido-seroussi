@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const POSTS_PER_PAGE = 10;
+
 function App() {
     const [posts, setPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMorePosts, setHasMorePosts] = useState(true);
+
     const [users, setUsers] = useState([]);
     const [postsNumber, setPostsNumber] = useState(0);
     const [topCreators, setTopCreators] = useState([]);
+    const [runtimeStatistics, setRuntimeStatistics] = useState([]);
 
     useEffect(() => {
         // Fetch posts
         axios.get('/api/posts')
-            .then(response => setPosts(response.data))
+            .then(response => {
+                setPosts(response.data)
+                setCurrentPage(2)
+            })
             .catch(error => console.error("There was an error fetching the posts: ", error));
 
         // Fetch users
@@ -25,7 +34,23 @@ function App() {
         axios.get('/api/statictics/topcreators')
             .then(response => setTopCreators(response.data))
             .catch(error => console.error("There was an error fetching the top creators: ", error));
+        axios.get('/api/statictics/runtimes')
+            .then(response => setRuntimeStatistics(response.data))
+            .catch(error => console.error("There was an error fetching the runtimes: ", error));
     }, []);
+
+    const fetchMorePosts = () => {
+        if (!hasMorePosts) return;
+
+        axios.get(`/api/posts?page=${currentPage}&limit=${POSTS_PER_PAGE}`)
+            .then(response => {
+                setPosts(prevPosts => [...prevPosts, ...response.data]);
+                setCurrentPage(prevPage => prevPage + 1);
+                // Update hasMorePosts based on response, e.g., by checking the length of the response
+                setHasMorePosts(response.data.length === POSTS_PER_PAGE);
+            })
+            .catch(error => console.error("There was an error fetching more posts: ", error));
+    };
 
     const handleDropAll = () => {
         axios.get('/api/dropall')
@@ -60,6 +85,10 @@ function App() {
                 ))}
                 </tbody>
             </table>
+
+            <button onClick={fetchMorePosts} disabled={!hasMorePosts}>
+                Get More Posts
+            </button>
 
             <h2>Users</h2>
             <table>
@@ -98,6 +127,12 @@ function App() {
             </table>
 
             <h2>Posts Number: {postsNumber}</h2>
+
+            <h2>Statistics</h2>
+            {Object.entries(runtimeStatistics).map(([key, value]) => (
+                <p key={key}>{key}: {value}</p>
+            ))}
+
 
             <button onClick={handleDropAll}>Drop All Data</button>
         </div>

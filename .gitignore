@@ -15,6 +15,7 @@
 
 # production
 /build
+atly.db
 
 # misc
 .DS_Store

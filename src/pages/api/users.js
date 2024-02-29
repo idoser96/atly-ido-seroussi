@@ -1,6 +1,6 @@
 import { getDb } from "@/db/db";
 
-// DEBUGGING ONLY
+// USED FOR TESTING PURPOSES ONLY
 
 export default function handler(req, res) {
     if (req.method === 'GET') {
