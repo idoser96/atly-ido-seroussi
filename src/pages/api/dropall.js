@@ -1,4 +1,5 @@
 import {getDb} from "@/db/db";
+import {clearAllCaches} from "@/db/cache";
 
 
 export default function handler(req, res) {
@@ -7,6 +8,7 @@ export default function handler(req, res) {
         const db = getDb()
         db.prepare('DELETE FROM posts').run()
         db.prepare('DELETE FROM users').run()
+        clearAllCaches()
     } else {
         res.setHeader('Allow', ['GET']);
         res.status(405).end(`Method ${req.method} Not Allowed`);

@@ -1,28 +1,28 @@
 import { getDb } from "@/db/db";
 import {getPostsCache, getPostsNumber, setPostsCache, setPostsNumber} from "@/db/cache"
 
-const addUserIfNotExists = (userId) => {
+const addUserIfNotExists = (userUuid) => {
     const db = getDb()
     // Check if the user exists
     const userCheckStmt = db.prepare('SELECT id FROM users WHERE uuid = ?');
-    const userExists = userCheckStmt.get(userId);
+    const userExists = userCheckStmt.get(userUuid);
 
     // If the user doesn't exist, create a new user
     if (!userExists) {
         const insertUserStmt = db.prepare('INSERT INTO users (uuid) VALUES (?)');
-        insertUserStmt.run(userId);
+        insertUserStmt.run(userUuid);
     }
 }
 
 export default function handler(req, res) {
     if (req.method === 'POST') {
         const db = getDb()
-        const { title, body, userId } = req.body
+        const { title, body, userUuid } = req.body
 
-        addUserIfNotExists(userId)
+        addUserIfNotExists(userUuid)
 
-        const stmt = db.prepare('INSERT INTO posts (title, body, userId) VALUES (?, ?, ?)')
-        const info = stmt.run(title, body, userId)
+        const stmt = db.prepare('INSERT INTO posts (title, body, userUuid) VALUES (?, ?, ?)')
+        const info = stmt.run(title, body, userUuid)
 
         const cachedNumber = getPostsNumber();
         if (cachedNumber !== undefined) {

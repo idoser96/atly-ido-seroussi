@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CACHE_DIR = 'cache';
+const CACHE_DIR = './cache';
 const postsCachePath = path.join(CACHE_DIR, 'postsCache.json');
 const postsNumberPath = path.join(CACHE_DIR, 'postsNumber.json');
 

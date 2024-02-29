@@ -5,6 +5,7 @@ function App() {
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const [postsNumber, setPostsNumber] = useState(0);
+    const [topCreators, setTopCreators] = useState([]);
 
     useEffect(() => {
         // Fetch posts
@@ -21,10 +22,13 @@ function App() {
         axios.get('/api/postsnumber')
             .then(response => setPostsNumber(response.data))
             .catch(error => console.error("There was an error fetching the posts number: ", error));
+        axios.get('/api/statictics/topcreators')
+            .then(response => setTopCreators(response.data))
+            .catch(error => console.error("There was an error fetching the top creators: ", error));
     }, []);
 
     const handleDropAll = () => {
-        axios.post('/api/dropall')
+        axios.get('/api/dropall')
             .then(() => {
                 // Optionally reset local state or refetch data
                 console.log('All data dropped successfully.');
@@ -43,7 +47,7 @@ function App() {
                 <tr>
                     <th>Title</th>
                     <th>Body</th>
-                    <th>User ID</th>
+                    <th>User Uuid</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,7 +55,7 @@ function App() {
                     <tr key={post.id}>
                         <td>{post.title}</td>
                         <td>{post.body}</td>
-                        <td>{post.userId}</td>
+                        <td>{post.userUuid}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -62,16 +66,32 @@ function App() {
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
+                    <th>Uuid</th>
                 </tr>
                 </thead>
                 <tbody>
                 {users.map(user => (
                     <tr key={user.id}>
                         <td>{user.id}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
+                        <td>{user.uuid}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+
+            <h2>Top Creators</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Uuid</th>
+                    <th>Posts</th>
+                </tr>
+                </thead>
+                <tbody>
+                {topCreators.map(creator => (
+                    <tr key={creator.userUuid}>
+                        <td>{creator.userUuid}</td>
+                        <td>{creator.posts}</td>
                     </tr>
                 ))}
                 </tbody>

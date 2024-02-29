@@ -4,6 +4,8 @@ let db;
 function getDb() {
     if (!db) {
         db = new Database('atly.db');
+        // db.exec('DROP TABLE IF EXISTS posts');
+        // db.exec('DROP TABLE IF EXISTS users');
         // Init tables
         db.exec(`
         CREATE TABLE IF NOT EXISTS users (
@@ -18,8 +20,8 @@ function getDb() {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 body TEXT NOT NULL,
-                userId INTEGER,
-                FOREIGN KEY (userId) REFERENCES users(id)
+                userUuid TEXT,
+                FOREIGN KEY (userUuid) REFERENCES users(uuid)
             );
 `);
     }
